@@ -1,12 +1,12 @@
 from django.shortcuts import render
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework.viewsets import GenericViewSet
-from . serializers import TournamentSerializer, CreateTournamentSerializer
+from . serializers import TournamentApiSerializer, CreateTournamentSerializer, UpdateTournamentSerializer
 from .models import Tournament, Player, SignUp
 
 class TournamentApi(GenericViewSet, ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
     queryset = Tournament.objects.all()
-    serializer_class = TournamentSerializer
+    serializer_class = TournamentApiSerializer
     
     
     def list(self, request, *args, **kwargs):
@@ -20,8 +20,17 @@ class TournamentApi(GenericViewSet, ListModelMixin, CreateModelMixin, RetrieveMo
         tournaments = Tournament.objects.all()
         return render(request, 'tournament.html', {'tournaments': tournaments})
     
+    def update(self, request, *args, **kwargs):
+        tournament = self.get_object()
+        serializer = UpdateTournamentSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.update(tournament, serializer.validated_data)
+        tournaments = Tournament.objects.all()
+        return render(request, 'tournament.html', {'tournaments': tournaments})
+    
     def destroy(self, request, *args, **kwargs):
         tournament = self.get_object()
         tournament.delete()
         tournaments = Tournament.objects.all()
         return render(request, 'tournament.html', {'tournaments': tournaments})
+    

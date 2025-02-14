@@ -16,7 +16,8 @@
                 <th>Name</th>
                 <th>Start Date</th>
                 <th>End Date</th>
-                <th>GAME</th>
+                <th>Game</th>
+                <th>Number of players</th>
             </tr>
         </thead>
         <tbody>
@@ -27,6 +28,7 @@
                 <td>{{ tournament.start_date }}</td>
                 <td>{{ tournament.end_date }}</td>
                 <td>{{ tournament.game }}</td>
+                <td>{{ tournament.num_of_players }}</td>
             </tr>
             {% endfor %}
         </tbody>
