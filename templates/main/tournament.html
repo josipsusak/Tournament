@@ -23,8 +23,8 @@
         <tbody>
             {% for tournament in tournaments %}
             <tr>
-                <td>{{ tournament.id }}</td>
-                <td>{{ tournament.name }}</td>
+                <td><a href="{% url 'tournament-detail' tournament.pk %}">{{ tournament.id }}</a></td>
+                <td><a href="{% url 'tournament-detail' tournament.pk %}">{{ tournament.name }}</a></td>
                 <td>{{ tournament.start_date }}</td>
                 <td>{{ tournament.end_date }}</td>
                 <td>{{ tournament.game }}</td>
