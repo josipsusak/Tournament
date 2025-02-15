@@ -1,4 +1,5 @@
 from django.db import models
+from Player.models import Player
 
 class Tournament(models.Model):
     name = models.CharField(max_length=100, unique=True, null=True, default=None)
@@ -11,13 +12,6 @@ class Tournament(models.Model):
     def __str__(self):
         return self.name
 
-class Player(models.Model):
-    firstname = models.CharField(max_length=100)
-    lastname = models.CharField(max_length=100)
-    email = models.EmailField()
-    
-    def __str__(self):
-        return self.firstname + ' ' + self.lastname
 
 class SignUp(models.Model):
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
