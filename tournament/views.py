@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from .forms import TournamentForm
 from django.http import Http404
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework.viewsets import GenericViewSet
-from rest_framework.exceptions import NotFound
+from rest_framework.views import APIView
 from . serializers import TournamentApiSerializer, CreateTournamentSerializer, UpdateTournamentSerializer
 from .models import Tournament, Player, SignUp
 
@@ -14,14 +15,20 @@ class TournamentApi(GenericViewSet, ListModelMixin, CreateModelMixin, RetrieveMo
     
     def list(self, request, *args, **kwargs):
         tournaments = Tournament.objects.all()
-        return render(request, self.html_path, {'tournaments': tournaments})
+        form = TournamentForm()
+        return render(request, self.html_path, {'tournaments': tournaments, 'form': form})
     
     def create(self, request, *args, **kwargs):
-        serializer = CreateTournamentSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.create(serializer.validated_data)
+        if request.method == "POST":
+            form = TournamentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('tournament-list')
+        else:
+            form = TournamentForm()
+
         tournaments = Tournament.objects.all()
-        return render(request, self.html_path, {'tournaments': tournaments})
+        return render(request, "tournament/tournament.html", {"form": form, "tournaments": tournaments})
     
     def update(self, request, *args, **kwargs):
         tournament = self.get_object()
@@ -43,3 +50,4 @@ class TournamentApi(GenericViewSet, ListModelMixin, CreateModelMixin, RetrieveMo
         tournament.delete()
         tournaments = Tournament.objects.all()
         return render(request, self.html_path, {'tournaments': tournaments})
+    

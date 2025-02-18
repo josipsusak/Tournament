@@ -1,9 +1,8 @@
 from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from .views import TournamentApi
-from rest_framework import routers
 
-router = routers.DefaultRouter()
-
+router = DefaultRouter()
 router.register('tournaments', TournamentApi, basename='tournament')
 
 urlpatterns = [
