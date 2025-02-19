@@ -33,7 +33,7 @@ class TournamentApi(GenericViewSet, ListModelMixin, CreateModelMixin, RetrieveMo
     def update(self, request, *args, **kwargs):
         tournament = self.get_object()
         if request.method == "POST":
-            serializer = TournamentApiSerializer(tournament, data=request.POST)
+            serializer = TournamentApiSerializer(tournament, data=request.POST, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return redirect('tournament-list')
