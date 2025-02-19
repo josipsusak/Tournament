@@ -12,6 +12,7 @@ class TournamentApi(GenericViewSet, ListModelMixin, CreateModelMixin, RetrieveMo
     serializer_class = TournamentApiSerializer
     html_path = 'tournament/tournament.html'
     detail_html_path = 'tournament/tournament_detail.html'
+    create_html_path = "tournament/tournament_create.html"
     
     def list(self, request, *args, **kwargs):
         tournaments = Tournament.objects.all()
@@ -19,24 +20,26 @@ class TournamentApi(GenericViewSet, ListModelMixin, CreateModelMixin, RetrieveMo
         return render(request, self.html_path, {'tournaments': tournaments, 'form': form})
     
     def create(self, request, *args, **kwargs):
+        form = TournamentForm()
+
         if request.method == "POST":
             form = TournamentForm(request.POST)
-        if form.is_valid():
-            form.save()
+            self.check_form(form=form)
             return redirect('tournament-list')
-        else:
-            form = TournamentForm()
-
-        tournaments = Tournament.objects.all()
-        return render(request, "tournament/tournament.html", {"form": form, "tournaments": tournaments})
+            
+        return render(request, self.create_html_path, {"form": form})
     
     def update(self, request, *args, **kwargs):
         tournament = self.get_object()
-        serializer = UpdateTournamentSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.update(tournament, serializer.validated_data)
-        tournaments = Tournament.objects.all()
-        return render(request, self.html_path, {'tournaments': tournaments})
+        
+        if request.method == "POST":
+            form = TournamentForm(request.POST, instance=tournament)
+            self.check_form(form=form)
+            return redirect('tournament-list')
+        else:
+            form = TournamentForm(instance=tournament)
+
+        return render(request, "tournament/tournament_update.html", {"form": form, "tournament": tournament})
     
     def retrieve(self, request, *args, **kwargs):
         try:
@@ -48,6 +51,9 @@ class TournamentApi(GenericViewSet, ListModelMixin, CreateModelMixin, RetrieveMo
     def destroy(self, request, *args, **kwargs):
         tournament = self.get_object()
         tournament.delete()
-        tournaments = Tournament.objects.all()
-        return render(request, self.html_path, {'tournaments': tournaments})
+        return redirect('tournament-list')
     
+    def check_form(self, form):
+        if form.is_valid():
+            form.save()
+            return redirect('tournament-list')
