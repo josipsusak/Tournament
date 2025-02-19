@@ -12,11 +12,33 @@
 
     <form method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
+        
+        <div>
+            <label for="id_name">Tournament Name:</label>
+            <input type="text" name="name" value="{{ serializer.initial_data.name }}" required>
+        </div>
+        
+        <div>
+            <label for="id_game">Game:</label>
+            <input type="text" name="game" value="{{ serializer.initial_data.game }}" required>
+        </div>
+
+        <div>
+            <label for="id_start_date">Start Date:</label>
+            <input type="date" name="start_date" value="{{ serializer.initial_data.start_date }}" required>
+        </div>
+
+        <div>
+            <label for="id_end_date">End Date:</label>
+            <input type="date" name="end_date" value="{{ serializer.initial_data.end_date }}" required>
+        </div>
+
+        <div>
+            <label for="id_num_of_players">Number of Players:</label>
+            <input type="number" name="num_of_players" value="{{ serializer.initial_data.num_of_players }}" required>
+        </div>
+
         <button type="submit">Update Tournament</button>
     </form>
-
-    <hr>
-    <a href="{% url 'tournament-list' %}">Back to Tournament List</a>
 </body>
 </html>

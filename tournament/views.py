@@ -20,26 +20,27 @@ class TournamentApi(GenericViewSet, ListModelMixin, CreateModelMixin, RetrieveMo
         return render(request, self.html_path, {'tournaments': tournaments, 'form': form})
     
     def create(self, request, *args, **kwargs):
-        form = TournamentForm()
-
         if request.method == "POST":
-            form = TournamentForm(request.POST)
-            self.check_form(form=form)
-            return redirect('tournament-list')
-            
-        return render(request, self.create_html_path, {"form": form})
+            serializer = TournamentApiSerializer(data=request.POST)
+            if serializer.is_valid():
+                serializer.save() 
+                return redirect('tournament-list')
+        else:
+            serializer = TournamentApiSerializer()
+
+        return render(request, 'tournament/tournament_create.html', {'serializer': serializer})
     
     def update(self, request, *args, **kwargs):
         tournament = self.get_object()
-        
         if request.method == "POST":
-            form = TournamentForm(request.POST, instance=tournament)
-            self.check_form(form=form)
-            return redirect('tournament-list')
+            serializer = TournamentApiSerializer(tournament, data=request.POST)
+            if serializer.is_valid():
+                serializer.save()
+                return redirect('tournament-list')
         else:
-            form = TournamentForm(instance=tournament)
-
-        return render(request, "tournament/tournament_update.html", {"form": form, "tournament": tournament})
+            serializer = TournamentApiSerializer(tournament)
+            
+        return render(request, 'tournament/tournament_update.html', {'serializer': serializer})
     
     def retrieve(self, request, *args, **kwargs):
         try:
