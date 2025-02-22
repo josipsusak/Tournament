@@ -1,11 +1,11 @@
-from django.urls import path, include
-from .views import PlayerProfileApi
-from rest_framework import routers
+from django.urls import path
+from .views import LoginView, SignupView, HomeView, LogoutView
 
-router = routers.DefaultRouter()
-
-router.register('create_profile', PlayerProfileApi, basename='create_profile')
+app_name = 'Player'
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('home/', HomeView.as_view(), name='home'),
+    path('login/', LoginView.as_view(), name='login'),
+    path('signup/', SignupView.as_view(), name='signup'),
+    path('logout/', LogoutView.as_view(), name='logout')
 ]

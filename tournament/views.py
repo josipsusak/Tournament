@@ -3,9 +3,8 @@ from .forms import TournamentForm
 from django.http import Http404
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework.viewsets import GenericViewSet
-from rest_framework.views import APIView
-from . serializers import TournamentApiSerializer, CreateTournamentSerializer, UpdateTournamentSerializer
-from .models import Tournament, Player, SignUp
+from . serializers import TournamentApiSerializer
+from .models import Tournament
 
 class TournamentApi(GenericViewSet, ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
     queryset = Tournament.objects.all()

@@ -1,0 +1,16 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Početna</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h2>Dobrodošli, {{ request.user.first_name }} {{ request.user.last_name }}!</h2>
+    <p>Email: {{ request.user.email }}</p>
+    <a href="{% url 'Player:logout' %}">Odjavi se</a>
+</body>
+</html>
+
